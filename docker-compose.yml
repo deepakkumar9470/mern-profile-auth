@@ -16,13 +16,18 @@ services:
     volumes:
       - ./react-docker/src:/app/src
     depends_on:
-      - server
+      - backend
   backend:
     build:
       context: './server'
       dockerfile: Dockerfile
     ports:
       - 5000:5000
+    environment:
+      PORT: 5000
+      MONGO_URL: your connection
+      JWT_SECRET_KEY: your jwt secret
+
     container_name: server-container
     networks:
       - mern-profile-network
