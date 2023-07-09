@@ -1,20 +1,22 @@
-version: '3'
+version: '3.8'
 services:
   front:
+    stdin_open: true
+    tty: true
     build:
       context: './react-docker'
       dockerfile: Dockerfile
     ports:
       - 3000:3000
-    container_name: react-container
+    container_name: react-profile-container
     environment:
       - WATCHPACK_POLLING=true
     networks:
       - mern-profile-network
     volumes:
-      - ./react-docker:/app
+      - ./react-docker/src:/app/src
     depends_on:
-      - backend
+      - server
   backend:
     build:
       context: './server'
@@ -29,14 +31,14 @@ services:
     depends_on:
       - mongo
   mongo:
-    image: mongo
+    image: mongo:6.0.5
     ports:
       - 27017:27017
     container_name: mongo-container
     networks:
       - mern-profile-network
     volumes:
-      - mongoData:/data/db
+      - mongodbData:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=<use .env file instead>
       - MONGO_INITDB_ROOT_PASSWORD=<use .env file instead>
@@ -44,4 +46,4 @@ services:
 networks:
   mern-profile-network:
 volumes:
-  mongoData:
+  mongodbData:
